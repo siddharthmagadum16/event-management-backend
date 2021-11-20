@@ -1,0 +1,6 @@
+node_modules/
+.prettierrc
+.env
+commands.txt
+database.sql
+insert_queries.sql
