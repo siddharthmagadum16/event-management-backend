@@ -25,10 +25,6 @@ async function isValidMaganerorCustomer(username, password,table_name,user_id) {
     .then(res =>{
         return res.rows.length === 1 ? 1  : 0;
     })
-    .then(res =>{
-        clgmsg("sendres",res);
-        return res;
-    })
     .catch(err => {
         setImmediate(() => {
             clgmsg('err',err);
@@ -59,11 +55,40 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get('/get-customer-events',(req, res) =>{
+
+async function getCustomerDetails(customer_id){
+
+    const command = `SELECT * FROM CUSTOMER WHERE cust_id=$1`
+
+    return await pool.query(command,[customer_id])
+    .then(res =>{
+        console.log(`table:`)
+        // console.table(res.rows)
+        return res.rows
+    })
+    .catch(err =>{
+        clgmsg('error: ', err);
+        throw err
+    })
+}
+
+app.get('/get-customer-events',async (req, res) =>{
     // const customer_id = res.body.customer_id;
     const customer_id = 'C00002'; // needs to be modified
-    
+
+
+    try {
+        const cust_details = await getCustomerDetails(customer_id)
+        res.send(cust_details);
+    }
+    catch (err) {
+        clgmsg('error: ', err);
+        return  res.send("0");
+    }
+
+
 })
+
 
 
 
