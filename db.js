@@ -7,7 +7,10 @@ const pool = new Pool ({
     password : process.env.PASSWORD,
     host : process.env.HOST,
     database : "event_management_system",
-    ssl : process.env.ENV === 'PRODUCTION' ? true : false,
+    ssl : process.env.ENV === 'PRODUCTION' ? {
+            sslmode: 'require',
+            rejectUnauthorized: false,
+        } : false,
 });
 
 module.exports = pool;
