@@ -55,10 +55,15 @@ app.post("/login", async (req, res) => {
         res.send("0");
         return;
     } finally {
-        
+
     }
 });
 
+app.get('/get-customer-events',(req, res) =>{
+    // const customer_id = res.body.customer_id;
+    const customer_id = 'C00002'; // needs to be modified
+    
+})
 
 
 
