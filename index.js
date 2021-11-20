@@ -11,32 +11,18 @@ app.get("/", (req, res) => {
     res.send("Hi hello test respose");
 });
 
-app.post("/new-customer", async (req, res) => {
-    try {
-        console.log(req.body);
-        const description = req.body.cust_name;
-        const newCust = await pool.query(
-            "INSERT INTO todo (cust_name) VALUES ($1)",
-            [description]
-        );
-        res.json(newCust.rows[0]);
-    } catch (err) {
-        console.log(`Error occurred ${err}`);
-        res.send("Error  -1");
-    }
-});
 
 function clgmsg(msg, msg2 = "") {
     console.log(`${msg} ${msg2}`);
 }
 
-async function isValidMaganer(username, password) {
-    const command = `SELECT m_id, password FROM Event_Manager WHERE m_id=$1 AND password=$2`;
+async function isValidMaganerorCustomer(username, password,table_name,user_id) {
+
+    const command = `SELECT ${user_id}, password FROM ${table_name} WHERE ${user_id}=$1 AND password=$2`;
     const details = [username, password];
 
     return await pool.query(command,details)
     .then(res =>{
-        // clgmsg("respose",JSON.stringify(res.rows));
         return res.rows.length === 1 ? 1  : 0;
     })
     .then(res =>{
@@ -45,6 +31,7 @@ async function isValidMaganer(username, password) {
     })
     .catch(err => {
         setImmediate(() => {
+            clgmsg('err',err);
             throw err;
         })
     })
@@ -56,28 +43,24 @@ app.post("/login", async (req, res) => {
     const password = req.body.password;
     clgmsg(username, password);
     try {
-        if (username[0] === "M") {
-            // if username is of event manager
-            const result = await isValidMaganer(username, password);
-            clgmsg('result',result);
-            if (result === 1) {
-                clgmsg("ok?");
-                return res.status(200).send("1");
-            } else {
-                clgmsg("isValidManager", result);
-                console.log(`not valid`)
-                return res.status(404).send("0");
-            }
+        const validManager = await isValidMaganerorCustomer(username, password,'Event_Manager','m_id',);
+        const validCustomer = await isValidMaganerorCustomer(username, password,'Customer','cust_id',);
+        if (validManager === 1 || validCustomer === 1) {
+            return res.status(200).send("1");
+        } else {
+            return res.status(404).send("0");
         }
     } catch (err) {
         clgmsg("error occurred: ", err);
         res.send("0");
         return;
     } finally {
-        clgmsg("do something");
-        // res.status(404).send("0");
+        
     }
 });
+
+
+
 
 const port = process.env.PORT || 4000;
 

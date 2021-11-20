@@ -7,11 +7,9 @@ const pool = new Pool ({
     password : process.env.PASSWORD,
     host : process.env.HOST,
     database : process.env.DATABASE,
-    ssl : process.env.ENV === 'PRODUCTION' ? {
-            sslmode: 'require',
-            rejectUnauthorized: false,
-        } : false,
+    ssl : false,
 });
+console.log(`pool : ${pool}`)
 
 module.exports = pool;
 
