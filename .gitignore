@@ -4,3 +4,4 @@ node_modules/
 commands.txt
 database.sql
 insert_queries.sql
+local.sql
