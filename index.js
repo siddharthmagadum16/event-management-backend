@@ -113,15 +113,6 @@ async function getOverallDetails(customer_id) {
     const command1 = `CREATE VIEW cust_event AS SELECT * FROM  EVENT NATURAL INNER JOIN CUSTOMER WHERE CUSTOMER.cust_id='C00002'`
 
     clgmsg('command:', command1)
-    // const result = await pool
-    // .query(command)
-    // .then(res => {
-    //     console.table(res.rows);
-    // })
-    // .catch(err => {
-    //     clgmsg('error: ', err);
-    //     throw err;
-    // })
 
     const command2 = `CREATE VIEW cust_event_evnt1 AS SELECT * FROM BIRTHDAY   RIGHT JOIN cust_event ON BID=EID`;
     const command3 = `CREATE VIEW cust_event_evnt2 AS SELECT * FROM WEDDING   RIGHT JOIN cust_event_evnt1 ON WID=EID`;
@@ -136,10 +127,6 @@ async function getOverallDetails(customer_id) {
     .then(() => pool.query(command4).then(res => { console.table(res.rows); return res}).catch(err4 =>  clgmsg('err4',err4)))
     .then(() => {
         return pool.query(command5)
-
-        // .catch(err =>{
-        //     clgmsg('err:',err); return false;
-        // })
     })
     .then(res=>{
         console.table(res.rows);
@@ -149,7 +136,6 @@ async function getOverallDetails(customer_id) {
 
 }
 
-// getOverallDetails('C00002')
 
 app.get('/get-customer-events',async (req, res) =>{
     // const customer_id = 'C00002'; // needs to be modified
@@ -161,7 +147,8 @@ app.get('/get-customer-events',async (req, res) =>{
             if(event_details === false) res.send("0");
             else {
                 console.table(event_details);
-                res.send("1")
+                // res.send("1")
+                res.send(event_details);
             }
             return;
         }
