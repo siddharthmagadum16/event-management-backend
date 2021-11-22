@@ -4,8 +4,8 @@ const pool = require("../startup/db");
 const clgmsg = require('../startup/logger')
 
 async function isValidMaganerorCustomer(username, password,table_name,user_id) {
-
-    const command = `SELECT ${user_id}, password FROM ${table_name} WHERE ${user_id}=$1 AND password=$2`;
+    const passwd = username[0] === 'M' ? 'mgr_password' : 'cust_password'
+    const command = `SELECT ${user_id}, ${passwd} FROM ${table_name} WHERE ${user_id}=$1 AND ${passwd}=$2`;
     const details = [username, password];
 
     return await pool.query(command,details)
@@ -26,8 +26,11 @@ auth.post("/login", async (req, res) => {
     const password = req.body.password;
     clgmsg(username, password); // need to remove logging
     try {
-        const validManager = await isValidMaganerorCustomer(username, password,'Event_Manager','m_id',);
-        const validCustomer = await isValidMaganerorCustomer(username, password,'Customer','cust_id',);
+        let validCustomer,validManager;
+        if(username[0] == 'M')
+            validManager = await isValidMaganerorCustomer(username, password,'Event_Manager','m_id',);
+        else
+            validCustomer = await isValidMaganerorCustomer(username, password,'Customer','cust_id',);
         if (validManager === 1 || validCustomer === 1) {
             return res.status(200).send("1");
         } else {
