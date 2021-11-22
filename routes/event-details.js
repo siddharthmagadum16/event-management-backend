@@ -36,9 +36,9 @@ async function getOverallDetails(customer_id) {
 }
 
 
-event.get('/get-all-event-details',async (req, res) =>{
-
-    const customer_id = req.body.customer_id;
+event.get('/get-all-event-details/:customer_id',async (req, res) =>{
+    clgmsg('req',JSON.stringify(req.params))
+    const customer_id = req.params.customer_id;
     try {
         const deleted = await deleteViews(); // delete views to prevent the error while creating new views
         if(deleted === true){
