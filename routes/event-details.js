@@ -18,8 +18,6 @@ async function getOverallDetails(customer_id) {
     const command2 =
     `SELECT * FROM cust_event LEFT JOIN BIRTHDAY ON BID=EID LEFT JOIN WEDDING ON WID=EID LEFT JOIN GENERAL ON GID=EID NATURAL JOIN Event_Manager NATURAL JOIN Venue_Manager NATURAL JOIN Caterer`
 
-    clgmsg('command1:', command1)
-    clgmsg('command2',command2)
 
     const promise_run_commands = new Promise((resolve,reject) => resolve(true))
     return await promise_run_commands
