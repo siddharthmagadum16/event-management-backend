@@ -1,5 +1,5 @@
 const express = require('express');
-const event = express.Router();
+const eventdetails = express.Router();
 const pool = require('../startup/db')
 const clgmsg = require('../startup/logger')
 
@@ -36,7 +36,7 @@ async function getOverallDetails(customer_id) {
 }
 
 
-event.get('/get-all-event-details/:customer_id',async (req, res) =>{
+eventdetails.get('/get-all-event-details/:customer_id',async (req, res) =>{
     clgmsg('req',JSON.stringify(req.params))
     const customer_id = req.params.customer_id;
     try {
@@ -59,4 +59,4 @@ event.get('/get-all-event-details/:customer_id',async (req, res) =>{
 })
 
 
-module.exports = event;
+module.exports = eventdetails;
