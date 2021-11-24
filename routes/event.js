@@ -33,23 +33,15 @@ event.post("/insert", async (req, res) => {
         .then((num) => getId(num, "E"))
         .then((id) => {
             event_id = id;
-            const details = process.env.ENV==='PRODUCTION' ?
+            const details =
             [
                 id,
                 Number(payload.event.budget),
                 Number(payload.event.audience),
-                Date(payload.event.start_dt),
-                Date(payload.event.end_dt),
+                payload.event.start_dt,
+                payload.event.end_dt,
                 payload.customer_id,
-            ] :
-            [
-                id,
-                Number(payload.event.budget),
-                Number(payload.event.audience),
-                new Date(),
-                new Date(),
-                payload.customer_id,
-            ] ;
+            ]
             clgmsg("event details: ", details);
             return client.query(
                 "INSERT INTO EVENT VALUES ($1,$2,$3,$4,$5,$6)",
