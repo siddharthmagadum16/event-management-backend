@@ -66,7 +66,7 @@ manager.put("/update", async (req, res) => {
         .finally(() => client.release());
 });
 
-manager.delete("/delete", async (req, res) => {
+manager.get("/delete", async (req, res) => {
     const event_id = req.body.event_id;
     console.log('adfadsf')
     console.log(event_id)
