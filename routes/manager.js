@@ -69,6 +69,7 @@ manager.put("/update", async (req, res) => {
 manager.delete("/delete", async (req, res) => {
     const event_id = req.body.event_id;
     console.log('adfadsf')
+    console.log(event_id)
     const client = await pool.connect();
     const p = new Promise((resolve,reject) => resolve(true))
 
@@ -77,6 +78,9 @@ manager.delete("/delete", async (req, res) => {
     .then(() =>{
         const command = `UPDATE event_manager SET eid=NULL WHERE eid=$1`;
         client.query(command , [event_id])
+        .then(res =>{
+            clgmsg('even_manager updated',"s")
+        })
         .catch(err => {
             clgmsg("throw err:",err);
             throw new Error(err)
@@ -85,9 +89,13 @@ manager.delete("/delete", async (req, res) => {
     .then(async() => {
         const command = "DELETE FROM event WHERE eid=$1";
         return await client.query(command, [event_id])
+        .then(res => clgmsg("deleted event","d"))
         .catch((err) => { console.log(err); throw new Error(err) });
     })
-    .then(() => client.query('COMMIT'))
+    .then(() => {
+        client.query('COMMIT');
+        console.log('commited also')
+    })
     .then(() => client.release())
     .then(() => res.send(true))
     .catch( err =>{

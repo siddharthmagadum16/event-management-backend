@@ -46,7 +46,7 @@ eventdetails.get("/get-all-event-details/:customer_id", async (req, res) => {
             const event_details = await getOverallDetails(customer_id);
             if (event_details === false) res.send("0");
             else {
-                console.log(event_details);
+                // console.log(event_details);
                 res.send(event_details);
             }
             return;
