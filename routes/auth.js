@@ -45,4 +45,8 @@ auth.post("/login", async (req, res) => {
     }
 });
 
+auth.post('/register',(req,res) =>{
+    
+})
+
 module.exports = auth

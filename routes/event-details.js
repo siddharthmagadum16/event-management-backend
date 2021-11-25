@@ -15,7 +15,7 @@ async function deleteViews() {
 
 async function getOverallDetails(customer_id) {
     const command1 = `CREATE VIEW cust_event AS SELECT * FROM  EVENT NATURAL INNER JOIN CUSTOMER WHERE CUSTOMER.cust_id='${customer_id}'`;
-    const command2 = `SELECT * FROM cust_event LEFT JOIN BIRTHDAY ON BID=EID LEFT JOIN WEDDING ON WID=EID LEFT JOIN GENERAL ON GID=EID NATURAL JOIN Event_Manager NATURAL JOIN venue NATURAL JOIN catering`;
+    const command2 = `SELECT * FROM cust_event LEFT JOIN BIRTHDAY ON BID=EID LEFT JOIN WEDDING ON WID=EID LEFT JOIN GENERAL ON GID=EID NATURAL JOIN Event_Manager NATURAL JOIN venue NATURAL JOIN catering  NATURAL JOIN decoration `;
 
     const promise_run_commands = new Promise((resolve, reject) =>
         resolve(true)
@@ -46,7 +46,7 @@ eventdetails.get("/get-all-event-details/:customer_id", async (req, res) => {
             const event_details = await getOverallDetails(customer_id);
             if (event_details === false) res.send("0");
             else {
-                // console.table(event_details);
+                console.log(event_details);
                 res.send(event_details);
             }
             return;

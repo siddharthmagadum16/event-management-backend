@@ -68,29 +68,35 @@ manager.put("/update", async (req, res) => {
 
 manager.delete("/delete", async (req, res) => {
     const event_id = req.body.event_id;
-
+    console.log('adfadsf')
     const client = await pool.connect();
-    const p = new Promise((reject, resolve) => resolve(true));
-    let result = await p
-        .then(() => client.query("BEGIN"))
-        .then(() => {
-            const command = "DELETE FROM event WHERE eid=$1 CASCADE";
-            client.query(command, [event_id]).catch((err) => {
-                throw new Error(err);
-            });
+    const p = new Promise((resolve,reject) => resolve(true))
+
+    return await p
+    .then(() => client.query("BEGIN"))
+    .then(() =>{
+        const command = `UPDATE event_manager SET eid=NULL WHERE eid=$1`;
+        client.query(command , [event_id])
+        .catch(err => {
+            clgmsg("throw err:",err);
+            throw new Error(err)
         })
-        .then(() => client.query("COMMIT"))
-        .then(() => true)
-        // .then(() => res.send(true))
-        .catch((err) => {
-            clgmsg("err:", err);
-            client.query("ROLLBACK");
-            // res.send(false);
-            false;
-        })
-        .finally(() => client.release());
-    // client.release();
-    res.send(result);
+    })
+    .then(async() => {
+        const command = "DELETE FROM event WHERE eid=$1";
+        return await client.query(command, [event_id])
+        .catch((err) => { console.log(err); throw new Error(err) });
+    })
+    .then(() => client.query('COMMIT'))
+    .then(() => client.release())
+    .then(() => res.send(true))
+    .catch( err =>{
+        clgmsg('final err:',err);
+        client.query('ROLLBACK')
+        client.release();
+        res.send(false)
+    })
+
 });
 
 module.exports = manager;

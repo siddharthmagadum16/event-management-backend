@@ -8,13 +8,49 @@ function catchError(err) {
     throw err;
 }
 
-function getId(num, pref) {
+// function getId(num, pref) {
+//     let newEventId = Number(num) + 1;
+//     if (newEventId < 10) newEventId = `${pref}0000${newEventId}`;
+//     else if (newEventId < 100) newEventId = `${pref}000${newEventId}`;
+//     else newEventId = `${pref}00${newEventId}`;
+//     return newEventId;
+// }
+
+async function getId(num, pref, tablename,table_id, client) {
     let newEventId = Number(num) + 1;
     if (newEventId < 10) newEventId = `${pref}0000${newEventId}`;
     else if (newEventId < 100) newEventId = `${pref}000${newEventId}`;
     else newEventId = `${pref}00${newEventId}`;
-    return newEventId;
+
+    return await client
+    .query(`select * from ${tablename} where ${table_id}=$1`,[newEventId])
+    .then(async (res) =>{
+        console.log(res.rows.length)
+        if(res.rows.length > 0){
+            return await getId(Number(num)+1, pref, tablename, table_id, client)
+        } else {
+            return newEventId;
+        }
+    })
 }
+
+// event.get('/testinsert',async(req,res) =>{
+//     const client = await pool.connect();
+//     return await getsome(11, 'E', "event", "eid", client)
+//     .then( result =>{
+//         clgmsg('new id',result);
+//         res.send(true)
+//         return result;
+//     })
+//     .catch(err=>{
+//         clgmsg('err',err);
+//         res.send(false)
+//     })
+//     .finally(() =>{
+//         client.release();
+//     })
+
+// })
 
 event.post("/insert", async (req, res) => {
     const payload = req.body;
@@ -30,7 +66,7 @@ event.post("/insert", async (req, res) => {
             return client.query("SELECT COUNT(*) FROM EVENT");
         })
         .then((res) => res.rows[0].count)
-        .then((num) => getId(num, "E"))
+        .then((num) => getId(num, "E","event","eid",client))
         .then((id) => {
             event_id = id;
             const details =
@@ -77,7 +113,7 @@ event.post("/insert", async (req, res) => {
             return client.query("SELECT COUNT(*) FROM venue");
         })
         .then((res) => res.rows[0].count)
-        .then((num) => getId(num, "V"))
+        .then((num) => getId(num, "V","venue","vid",client))
         .then(async (id) => {
             const details = [
                 id,
@@ -99,7 +135,7 @@ event.post("/insert", async (req, res) => {
             return client.query("SELECT COUNT(*) FROM decoration");
         })
         .then((res) => res.rows[0].count)
-        .then((num) => getId(num, "D"))
+        .then((num) => getId(num, "D","decoration","did",client))
         .then(async (id) => {
             const details = [
                 id,
@@ -125,7 +161,7 @@ event.post("/insert", async (req, res) => {
             return client.query("SELECT COUNT(*) FROM catering");
         })
         .then((res) => res.rows[0].count)
-        .then((num) => getId(num, "C"))
+        .then((num) => getId(num, "C","catering","cid",client))
         .then(async (id) => {
             const details = [
                 id,
