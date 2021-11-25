@@ -66,8 +66,8 @@ manager.put("/update", async (req, res) => {
         .finally(() => client.release());
 });
 
-manager.get("/delete", async (req, res) => {
-    const event_id = req.body.event_id;
+manager.get("/delete/:eid", async (req, res) => {
+    const event_id = req.params.eid;
     console.log('adfadsf')
     console.log(event_id)
     const client = await pool.connect();
