@@ -182,7 +182,7 @@ event.post("/insert", async (req, res) => {
             clgmsg("inserted: catering");
         })
 
-        .then(() => {
+        .then(async () => {
             // event, accordingly , if exists
             clgmsg('birthday outer:', payload?.birthday)
             clgmsg('wedding  outer:', payload?.wedding)
@@ -221,7 +221,7 @@ event.post("/insert", async (req, res) => {
                 event_table = "GENERAL";
             } else throw new Error("event details not mentioned");
             clgmsg("event table details", details);
-            return client
+            return await client
                 .query(
                     `INSERT INTO ${event_table} VALUES ${tuplenums}`,
                     details
