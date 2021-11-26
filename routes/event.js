@@ -184,6 +184,13 @@ event.post("/insert", async (req, res) => {
 
         .then(() => {
             // event, accordingly , if exists
+            clgmsg('birthday outer:', payload?.birthday)
+            clgmsg('wedding  outer:', payload?.wedding)
+            clgmsg('general  outer:', payload?.general)
+
+            clgmsg('birthday', payload?.birthday?.bname)
+            clgmsg('wedding', payload?.wedding?.bride_name)
+            clgmsg('general', payload?.general?.event_name)
             let details, tuplenums, event_table;
             if (payload?.birthday?.bname !== undefined) {
                 details = [
