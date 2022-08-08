@@ -12,6 +12,8 @@ const pool = new Pool ({
         rejectUnauthorized: false,
     } : false,
 });
+
+
 console.log(`pool : ${pool}`)
 
 module.exports = pool;
