@@ -16,7 +16,7 @@ async function getId(num, pref, tablename,table_id, client) {
     else newEventId = `${pref}00${newEventId}`;
 
     return await client
-    .query(`select * from ${tablename} where ${table_id}=$1`,[newEventId])
+    .query(`SELECT * FROM ${tablename} WHERE ${table_id}=$1`,[newEventId])
     .then(async (res) =>{
         console.log(res.rows.length)
         if(res.rows.length > 0){
@@ -160,13 +160,6 @@ event.post("/insert", async (req, res) => {
 
         .then(async () => {
             // event, accordingly , if exists
-            clgmsg('birthday outer:', payload?.birthday)
-            clgmsg('wedding  outer:', payload?.wedding)
-            clgmsg('general  outer:', payload?.general)
-
-            clgmsg('birthday', payload?.birthday?.bname)
-            clgmsg('wedding', payload?.wedding?.bride_name)
-            clgmsg('general', payload?.general?.event_name)
             let details, tuplenums, event_table;
             if (payload?.birthday?.bname !== undefined) {
                 details = [
